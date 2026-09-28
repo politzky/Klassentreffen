@@ -135,7 +135,7 @@
 /* ===== Einstellungen ===== */
 const CODE       = "kZjaLk7ZR6BaQiHOVW8AvHDmnrpulRoLlg57";   // pCloud-Freigabecode
 const COVER_NAME = "20260926_212040.heic";                    // Titelbild (Dateiname im Album)
-const UPLOAD_URL = "";   // optional: pCloud-Upload-Link hier eintragen
+const UPLOAD_URL = `https://e.pcloud.link/publink/show?code=${CODE}`;   // Link erlaubt Hochladen
 /* ========================= */
 
 const API = "https://eapi.pcloud.com";
@@ -156,7 +156,7 @@ if (UPLOAD_URL) {
   document.getElementById("uploadLink").href = UPLOAD_URL;
   document.getElementById("uploadWrap").hidden = false;
   document.getElementById("contribText").textContent =
-    "Lade sie direkt ins Album hoch, ganz ohne Anmeldung.";
+    "Lade sie direkt ins Album hoch: Link öffnen und dort auf Hochladen tippen. Neue Fotos erscheinen dann automatisch hier auf der Seite.";
 }
 
 /* Vorschau: versucht, die Bildliste über die öffentliche pCloud-Schnittstelle zu laden.
