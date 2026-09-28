@@ -88,7 +88,7 @@
   <header class="hero">
     <div class="mount">
       <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
-      <img id="cover" alt="Foto vom Klassentreffen" src="">
+      <img id="cover" alt="Foto vom Klassentreffen">
     </div>
     <div>
       <h1>Klassentreffen, 40&nbsp;Jahre danach</h1>
@@ -104,7 +104,7 @@
   <p class="hint">Dort kannst du einzelne Bilder oder das ganze Album herunterladen.</p>
 
   <section id="gallerySection" hidden>
-    <h2>Ein paar Eindrücke</h2>
+    <h2>Die Fotos vom Abend</h2>
     <div class="grid" id="grid"></div>
     <div class="more"><a class="btn ghost" id="moreLink" href="#" target="_blank" rel="noopener">Alle Fotos in voller Größe</a></div>
   </section>
@@ -134,9 +134,8 @@
 <script>
 /* ===== Einstellungen ===== */
 const CODE       = "kZjaLk7ZR6BaQiHOVW8AvHDmnrpulRoLlg57";   // pCloud-Freigabecode
-const COVER_ID   = 107550758832;                              // Titelbild (fileid)
+const COVER_NAME = "20260926_212040.heic";                    // Titelbild (Dateiname im Album)
 const UPLOAD_URL = "";   // optional: pCloud-Upload-Link hier eintragen
-const PREVIEW_MAX = 24;  // wie viele Vorschaubilder auf der Seite
 /* ========================= */
 
 const API = "https://eapi.pcloud.com";
@@ -148,7 +147,9 @@ document.getElementById("albumLink").href = ALBUM_URL;
 document.getElementById("moreLink").href  = ALBUM_URL;
 
 const cover = document.getElementById("cover");
-cover.src = thumb(COVER_ID, "1200x800", true);
+const mount = cover.closest(".mount");
+mount.style.visibility = "hidden";
+cover.onload = () => { mount.style.visibility = "visible"; };
 cover.onerror = () => { cover.closest(".mount").style.display = "none"; };
 
 if (UPLOAD_URL) {
@@ -163,7 +164,7 @@ if (UPLOAD_URL) {
 function collect(node, out) {
   for (const it of node.contents || []) {
     if (it.isfolder) collect(it, out);
-    else if (it.category === 1 || /\.(jpe?g|png|heic|webp)$/i.test(it.name)) out.push(it.fileid);
+    else if (it.category === 1 || /\.(jpe?g|png|heic|webp)$/i.test(it.name)) out.push(it);
   }
   return out;
 }
@@ -189,10 +190,13 @@ fetch(`${API}/showpublink?code=${CODE}`)
   .then(r => r.json())
   .then(d => {
     if (d.result !== 0) throw new Error(d.error || "pCloud-Fehler");
-    ids = collect(d.metadata, []);
-    if (!ids.length) return;
+    const files = collect(d.metadata, []).sort((a, b) => a.name.localeCompare(b.name));
+    ids = files.map(f => f.fileid);
+    if (!ids.length) { mount.style.display = "none"; return; }
+    const c = files.find(f => f.name === COVER_NAME) || files[0];
+    cover.src = thumb(c.fileid, "1200x800", true);
     const grid = document.getElementById("grid");
-    ids.slice(0, PREVIEW_MAX).forEach((id, i) => {
+    ids.forEach((id, i) => {
       const b = document.createElement("button");
       b.type = "button";
       b.style.setProperty("--r", `${((i * 37) % 7 - 3) * 0.5}deg`);
@@ -207,7 +211,7 @@ fetch(`${API}/showpublink?code=${CODE}`)
     });
     document.getElementById("gallerySection").hidden = false;
   })
-  .catch(() => { /* still: nur Button anzeigen */ });
+  .catch(() => { mount.style.display = "none"; });
 </script>
 </body>
 </html>
