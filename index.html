@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Klassentreffen – 40 Jahre danach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Libre+Franklin:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --album:#1F2A26;      /* dunkler Albumkarton */
+    --album-2:#28352F;
+    --pen:#F1F3EE;        /* weißer Albumstift */
+    --print:#F7F6F1;      /* Fotorand */
+    --corner:#0C110F;     /* Fotoecken */
+    --amber:#D9A441;
+    --muted:#A9B7AF;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--album);color:var(--pen);
+    font:400 17px/1.6 "Libre Franklin",system-ui,sans-serif;
+    background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:5px 5px;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:40px 20px 64px}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:4px}
+
+  /* Titelbild mit Fotoecken */
+  .hero{display:grid;gap:28px;justify-items:center;text-align:center;padding-top:8px}
+  .mount{position:relative;background:var(--print);padding:12px 12px 14px;
+    transform:rotate(-1.6deg);box-shadow:0 14px 30px rgba(0,0,0,.45);
+    width:min(560px,100%)}
+  .mount img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:#cfd3cc}
+  .mount .c{position:absolute;width:34px;height:34px;background:var(--corner)}
+  .c.tl{top:-6px;left:-6px;clip-path:polygon(0 0,100% 0,0 100%)}
+  .c.tr{top:-6px;right:-6px;clip-path:polygon(0 0,100% 0,100% 100%)}
+  .c.bl{bottom:-6px;left:-6px;clip-path:polygon(0 0,0 100%,100% 100%)}
+  .c.br{bottom:-6px;right:-6px;clip-path:polygon(100% 0,100% 100%,0 100%)}
+  h1{font:700 clamp(46px,9vw,84px)/1 "Caveat",cursive;margin:6px 0 0;letter-spacing:.5px}
+  .sub{font:500 clamp(24px,4.4vw,32px)/1.2 "Caveat",cursive;color:var(--muted);margin:4px 0 0}
+
+  .intro{max-width:34em;margin:36px auto 0;text-align:center;color:#DCE2DD}
+
+  .actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:24px}
+  .btn{display:inline-block;padding:14px 22px;border-radius:10px;font-weight:600;
+    text-decoration:none;background:var(--amber);color:#1a1405}
+  .btn.ghost{background:transparent;color:var(--pen);border:2px solid var(--muted)}
+  .hint{text-align:center;color:var(--muted);font-size:15px;margin-top:10px}
+
+  /* Galerie */
+  section{margin-top:64px}
+  h2{font:700 40px/1.1 "Caveat",cursive;margin:0 0 20px;text-align:center}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:18px}
+  .grid button{all:unset;cursor:pointer;background:var(--print);padding:6px 6px 8px;
+    box-shadow:0 6px 14px rgba(0,0,0,.4);transform:rotate(var(--r,0deg))}
+  .grid button:focus-visible{outline:3px solid var(--amber);outline-offset:4px}
+  .grid img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#cfd3cc}
+  .status{text-align:center;color:var(--muted)}
+  .more{text-align:center;margin-top:22px}
+
+  .contribute{background:var(--album-2);border-radius:14px;padding:28px 22px;text-align:center}
+  .contribute p{margin:0 auto;max-width:32em}
+
+  footer{margin-top:56px;text-align:center;color:var(--muted);font-size:14px}
+
+  /* Großansicht */
+  dialog{border:0;padding:0;background:transparent;max-width:94vw;max-height:92vh}
+  dialog::backdrop{background:rgba(8,12,10,.88)}
+  dialog img{display:block;max-width:94vw;max-height:84vh;background:var(--print);padding:8px}
+  .dlg-bar{display:flex;justify-content:space-between;gap:12px;margin-top:10px}
+  .dlg-bar button{font:600 15px "Libre Franklin",sans-serif;padding:10px 16px;border-radius:8px;
+    border:2px solid var(--muted);background:transparent;color:var(--pen);cursor:pointer}
+
+  @media (prefers-reduced-motion:no-preference){
+    .mount{animation:settle .9s cubic-bezier(.2,.8,.2,1) both}
+    @keyframes settle{from{transform:rotate(-6deg) translateY(-14px);opacity:0}to{transform:rotate(-1.6deg);opacity:1}}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="mount">
+      <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+      <img id="cover" alt="Foto vom Klassentreffen" src="">
+    </div>
+    <div>
+      <h1>Klassentreffen, 40&nbsp;Jahre danach</h1>
+      <p class="sub">POS Warza, Abschlussjahrgang 1986</p>
+    </div>
+  </header>
+
+  <p class="intro">Vierzig Jahre nach dem Abschluss haben wir uns wiedergesehen. Hier findest du die Fotos von allen, die an dem Abend fotografiert haben.</p>
+
+  <div class="actions">
+    <a class="btn" id="albumLink" href="#" target="_blank" rel="noopener">Alle Fotos öffnen</a>
+  </div>
+  <p class="hint">Dort kannst du einzelne Bilder oder das ganze Album herunterladen.</p>
+
+  <section id="gallerySection" hidden>
+    <h2>Ein paar Eindrücke</h2>
+    <div class="grid" id="grid"></div>
+    <div class="more"><a class="btn ghost" id="moreLink" href="#" target="_blank" rel="noopener">Alle Fotos in voller Größe</a></div>
+  </section>
+
+  <section>
+    <div class="contribute">
+      <h2>Du hast auch fotografiert?</h2>
+      <p id="contribText">Schick deine Fotos an Steffen, dann kommen sie mit ins Album.</p>
+      <div class="actions" id="uploadWrap" hidden>
+        <a class="btn" id="uploadLink" href="#" target="_blank" rel="noopener">Eigene Fotos hochladen</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>Diese Seite ist für unsere Klasse gedacht. Bitte teil den Link nur mit Ehemaligen.</footer>
+</div>
+
+<dialog id="dlg">
+  <img id="dlgImg" alt="">
+  <div class="dlg-bar">
+    <button type="button" id="prev">Zurück</button>
+    <button type="button" id="close">Schließen</button>
+    <button type="button" id="next">Weiter</button>
+  </div>
+</dialog>
+
+<script>
+/* ===== Einstellungen ===== */
+const CODE       = "kZjaLk7ZR6BaQiHOVW8AvHDmnrpulRoLlg57";   // pCloud-Freigabecode
+const COVER_ID   = 107550758832;                              // Titelbild (fileid)
+const UPLOAD_URL = "";   // optional: pCloud-Upload-Link hier eintragen
+const PREVIEW_MAX = 24;  // wie viele Vorschaubilder auf der Seite
+/* ========================= */
+
+const API = "https://eapi.pcloud.com";
+const ALBUM_URL = `https://e.pcloud.link/publink/show?code=${CODE}`;
+const thumb = (id, size, crop) =>
+  `${API}/getpubthumb?code=${CODE}&fileid=${id}&size=${size}&crop=${crop ? 1 : 0}&type=jpg`;
+
+document.getElementById("albumLink").href = ALBUM_URL;
+document.getElementById("moreLink").href  = ALBUM_URL;
+
+const cover = document.getElementById("cover");
+cover.src = thumb(COVER_ID, "1200x800", true);
+cover.onerror = () => { cover.closest(".mount").style.display = "none"; };
+
+if (UPLOAD_URL) {
+  document.getElementById("uploadLink").href = UPLOAD_URL;
+  document.getElementById("uploadWrap").hidden = false;
+  document.getElementById("contribText").textContent =
+    "Lade sie direkt ins Album hoch, ganz ohne Anmeldung.";
+}
+
+/* Vorschau: versucht, die Bildliste über die öffentliche pCloud-Schnittstelle zu laden.
+   Klappt das nicht, bleibt einfach der Button – die Seite funktioniert trotzdem. */
+function collect(node, out) {
+  for (const it of node.contents || []) {
+    if (it.isfolder) collect(it, out);
+    else if (it.category === 1 || /\.(jpe?g|png|heic|webp)$/i.test(it.name)) out.push(it.fileid);
+  }
+  return out;
+}
+
+let ids = [], cur = 0;
+const dlg = document.getElementById("dlg"), dlgImg = document.getElementById("dlgImg");
+function show(i) {
+  cur = (i + ids.length) % ids.length;
+  dlgImg.src = thumb(ids[cur], "1600x1600", false);
+  dlgImg.alt = `Foto ${cur + 1} von ${ids.length}`;
+}
+document.getElementById("prev").onclick  = () => show(cur - 1);
+document.getElementById("next").onclick  = () => show(cur + 1);
+document.getElementById("close").onclick = () => dlg.close();
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+document.addEventListener("keydown", e => {
+  if (!dlg.open) return;
+  if (e.key === "ArrowLeft") show(cur - 1);
+  if (e.key === "ArrowRight") show(cur + 1);
+});
+
+fetch(`${API}/showpublink?code=${CODE}`)
+  .then(r => r.json())
+  .then(d => {
+    if (d.result !== 0) throw new Error(d.error || "pCloud-Fehler");
+    ids = collect(d.metadata, []);
+    if (!ids.length) return;
+    const grid = document.getElementById("grid");
+    ids.slice(0, PREVIEW_MAX).forEach((id, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.style.setProperty("--r", `${((i * 37) % 7 - 3) * 0.5}deg`);
+      b.setAttribute("aria-label", `Foto ${i + 1} groß anzeigen`);
+      const img = document.createElement("img");
+      img.loading = "lazy"; img.alt = "";
+      img.src = thumb(id, "400x400", true);
+      img.onerror = () => b.remove();
+      b.appendChild(img);
+      b.onclick = () => { show(i); dlg.showModal(); };
+      grid.appendChild(b);
+    });
+    document.getElementById("gallerySection").hidden = false;
+  })
+  .catch(() => { /* still: nur Button anzeigen */ });
+</script>
+</body>
+</html>
