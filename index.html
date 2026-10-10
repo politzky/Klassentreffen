@@ -55,12 +55,13 @@
   /* Galerie */
   section{margin-top:64px}
   h2{font:700 40px/1.1 "Caveat",cursive;margin:0 0 20px;text-align:center}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:18px}
-  .grid button{all:unset;cursor:pointer;background:var(--print);padding:6px 6px 8px;
-    box-shadow:0 6px 14px rgba(0,0,0,.4);transform:rotate(var(--r,0deg))}
-  .grid button:focus-visible{outline:3px solid var(--amber);outline-offset:4px}
-  .grid img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#cfd3cc}
-  .status{text-align:center;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+  .grid button{padding:0;border:0;cursor:pointer;background:var(--album-2);border-radius:6px;overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.35);transition:transform .15s,box-shadow .15s}
+  .grid button:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.45)}
+  .grid button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .grid img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+  .status{text-align:center;color:var(--muted);font-size:15px;margin:0 0 14px}
   .more{text-align:center;margin-top:22px}
 
   .contribute{background:var(--album-2);border-radius:14px;padding:28px 22px;text-align:center}
@@ -68,13 +69,22 @@
 
   footer{margin-top:56px;text-align:center;color:var(--muted);font-size:14px}
 
-  /* Großansicht */
-  dialog{border:0;padding:0;background:transparent;max-width:94vw;max-height:92vh}
-  dialog::backdrop{background:rgba(8,12,10,.88)}
-  dialog img{display:block;max-width:94vw;max-height:84vh;background:var(--print);padding:8px}
-  .dlg-bar{display:flex;justify-content:space-between;gap:12px;margin-top:10px}
-  .dlg-bar button{font:600 15px "Libre Franklin",sans-serif;padding:10px 16px;border-radius:8px;
-    border:2px solid var(--muted);background:transparent;color:var(--pen);cursor:pointer}
+  /* Großansicht (Vollbild) */
+  #dlg{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;
+    margin:0;padding:0;border:0;background:#0b0f0d;color:#fff;overflow:hidden}
+  #dlg[open]{display:flex;align-items:center;justify-content:center}
+  #dlg::backdrop{background:#0b0f0d}
+  #dlg img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
+    user-select:none;-webkit-user-select:none}
+  .dlg-btn{position:absolute;z-index:2;display:flex;align-items:center;justify-content:center;
+    width:48px;height:48px;border-radius:50%;border:0;padding:0;cursor:pointer;
+    background:rgba(0,0,0,.45);color:#fff;font-size:1.6rem;line-height:1;-webkit-tap-highlight-color:transparent}
+  .dlg-btn:hover,.dlg-btn:focus-visible{background:rgba(0,0,0,.7);outline:none}
+  .dlg-prev{left:max(10px,env(safe-area-inset-left));top:50%;transform:translateY(-50%)}
+  .dlg-next{right:max(10px,env(safe-area-inset-right));top:50%;transform:translateY(-50%)}
+  .dlg-close{right:max(10px,env(safe-area-inset-right));top:max(10px,env(safe-area-inset-top));font-size:1.3rem}
+  .dlg-count{position:absolute;z-index:2;left:max(14px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));
+    padding:6px 12px;border-radius:20px;background:rgba(0,0,0,.45);font-size:14px;color:rgba(255,255,255,.9)}
 
   @media (prefers-reduced-motion:no-preference){
     .mount{animation:settle .9s cubic-bezier(.2,.8,.2,1) both}
@@ -105,6 +115,7 @@
 
   <section id="gallerySection" hidden>
     <h2>Die Fotos vom Abend</h2>
+    <p class="status" id="status"></p>
     <div class="grid" id="grid"></div>
     <div class="more"><a class="btn ghost" id="moreLink" href="#" target="_blank" rel="noopener">Alle Fotos in voller Größe</a></div>
   </section>
@@ -122,13 +133,12 @@
   <footer>Diese Seite ist für unsere Klasse gedacht. Bitte teil den Link nur mit Ehemaligen.</footer>
 </div>
 
-<dialog id="dlg">
+<dialog id="dlg" aria-label="Foto-Großansicht">
   <img id="dlgImg" alt="">
-  <div class="dlg-bar">
-    <button type="button" id="prev">Zurück</button>
-    <button type="button" id="close">Schließen</button>
-    <button type="button" id="next">Weiter</button>
-  </div>
+  <span class="dlg-count" id="dlgCount"></span>
+  <button type="button" class="dlg-btn dlg-close" id="close" aria-label="Schließen">&#x2715;</button>
+  <button type="button" class="dlg-btn dlg-prev" id="prev" aria-label="Vorheriges Foto">&#x2039;</button>
+  <button type="button" class="dlg-btn dlg-next" id="next" aria-label="Nächstes Foto">&#x203A;</button>
 </dialog>
 
 <script>
@@ -171,19 +181,31 @@ function collect(node, out) {
 
 let ids = [], cur = 0;
 const dlg = document.getElementById("dlg"), dlgImg = document.getElementById("dlgImg");
+const big = id => thumb(id, "1600x1600", false);
 function show(i) {
   cur = (i + ids.length) % ids.length;
-  dlgImg.src = thumb(ids[cur], "1600x1600", false);
+  dlgImg.src = big(ids[cur]);
   dlgImg.alt = `Foto ${cur + 1} von ${ids.length}`;
+  document.getElementById("dlgCount").textContent = `${cur + 1} / ${ids.length}`;
+  [1, -1].forEach(d => { const pre = new Image(); pre.src = big(ids[(cur + d + ids.length) % ids.length]); });
 }
+function open(i) { show(i); document.documentElement.style.overflow = "hidden"; dlg.showModal(); }
 document.getElementById("prev").onclick  = () => show(cur - 1);
 document.getElementById("next").onclick  = () => show(cur + 1);
 document.getElementById("close").onclick = () => dlg.close();
 dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+dlg.addEventListener("close", () => { document.documentElement.style.overflow = ""; });
 document.addEventListener("keydown", e => {
   if (!dlg.open) return;
   if (e.key === "ArrowLeft") show(cur - 1);
   if (e.key === "ArrowRight") show(cur + 1);
+});
+let x0 = null;
+dlg.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+dlg.addEventListener("touchend", e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0; x0 = null;
+  if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1));
 });
 
 fetch(`${API}/showpublink?code=${CODE}`)
@@ -199,16 +221,16 @@ fetch(`${API}/showpublink?code=${CODE}`)
     ids.forEach((id, i) => {
       const b = document.createElement("button");
       b.type = "button";
-      b.style.setProperty("--r", `${((i * 37) % 7 - 3) * 0.5}deg`);
       b.setAttribute("aria-label", `Foto ${i + 1} groß anzeigen`);
       const img = document.createElement("img");
       img.loading = "lazy"; img.alt = "";
-      img.src = thumb(id, "400x400", true);
+      img.src = thumb(id, "300x300", true);
       img.onerror = () => b.remove();
       b.appendChild(img);
-      b.onclick = () => { show(i); dlg.showModal(); };
+      b.onclick = () => open(i);
       grid.appendChild(b);
     });
+    document.getElementById("status").textContent = `${ids.length} Fotos · antippen für Großansicht`;
     document.getElementById("gallerySection").hidden = false;
   })
   .catch(() => { mount.style.display = "none"; });
